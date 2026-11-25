@@ -1,0 +1,68 @@
+<div class="page-header" style="margin-top: 0;">
+  <div class="pull-right">
+    <%= link_to faculties_path, class: 'btn btn-default' do %>
+      <i class="fa fa-arrow-left"></i> Volver a Facultades
+    <% end %>
+  </div>
+  <h2><%= @faculty.name %> <small>(<%= @faculty.code %>)</small></h2>
+  <p class="text-muted"><%= @faculty.campus %> - Fundada en <%= @faculty.foundation_year %> - Decano: <%= @faculty.dean %></p>
+</div>
+
+<div class="row">
+  <div class="col-md-7">
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-graduation-cap"></i> Programas Curriculares Adscritos
+      </div>
+      <div class="panel-body" style="padding: 0;">
+        <table class="table table-hover table-striped" style="margin-bottom: 0;">
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Programa</th>
+              <th>Nivel</th>
+              <th>Creditos</th>
+              <th>Accion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @careers.each do |career| %>
+              <tr>
+                <td><code><%= career.code %></code></td>
+                <td><strong><%= career.name %></strong></td>
+                <td><span class="label label-default"><%= career.degree_level %></span></td>
+                <td><%= career.total_credits %> cred.</td>
+                <td>
+                  <%= link_to career_path(career), class: 'btn btn-xs btn-unal-primary' do %>
+                    <i class="fa fa-eye"></i> Ver Malla
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-briefcase"></i> Planta Docente de la Facultad
+      </div>
+      <div class="panel-body" style="padding: 0;">
+        <ul class="list-group" style="margin-bottom: 0;">
+          <% @teachers.each do |teacher| %>
+            <li class="list-group-item">
+              <span class="badge"><%= teacher.academic_degree %></span>
+              <h5 style="margin: 0 0 3px 0;">
+                <%= link_to teacher.full_name, teacher_path(teacher) %>
+              </h5>
+              <small class="text-muted"><%= teacher.department %> | <%= teacher.email %></small>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

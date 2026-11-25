@@ -1,0 +1,69 @@
+<div class="page-header" style="margin-top: 0;">
+  <h2><i class="fa fa-users text-success"></i> Directorio de Estudiantes</h2>
+  <p class="text-muted">Registro de matriculados, codigos SIA y estado de rendimiento academico.</p>
+</div>
+
+<div class="well" style="background:#FFF; border-radius: 8px;">
+  <%= form_tag students_path, method: :get, class: 'form-inline' do %>
+    <div class="form-group" style="width: 75%;">
+      <%= text_field_tag :q, @query, placeholder: "Buscar por nombre, apellido, documento o carnet estudiante UNAL...", class: 'form-control input-lg', style: 'width: 100%;' %>
+    </div>
+    <%= submit_tag "Buscar Estudiante", class: 'btn btn-unal-primary btn-lg' %>
+    <% if @query.present? %>
+      <%= link_to "Limpiar", students_path, class: 'btn btn-default btn-lg' %>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="panel panel-default panel-unal">
+  <div class="panel-body" style="padding: 0;">
+    <table class="table table-hover table-striped" style="margin-bottom: 0;">
+      <thead>
+        <tr>
+          <th>Carnet UNAL</th>
+          <th>Estudiante</th>
+          <th>Documento</th>
+          <th>Programa Curricular</th>
+          <th>PAPA</th>
+          <th>Avance</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @students.each do |student| %>
+          <tr>
+            <td><code><%= student.student_code %></code></td>
+            <td>
+              <strong><%= link_to student.full_name, student_path(student) %></strong>
+              <br><small class="text-muted"><%= student.email %></small>
+            </td>
+            <td><%= student.document %></td>
+            <td><%= student.career.try(:name) %></td>
+            <td>
+              <span class="label label-<%= student.papa.to_f >= 3.8 ? 'success' : (student.papa.to_f >= 3.0 ? 'primary' : 'danger') %>" style="font-size: 13px;">
+                <%= student.papa %>
+              </span>
+            </td>
+            <td>
+              <div class="progress" style="margin-bottom: 0; min-width: 90px; height: 16px;">
+                <div class="progress-bar progress-bar-success" role="progressbar" style="width: <%= student.percentage_advance %>%;">
+                  <span style="font-size: 10px; line-height: 16px;"><%= student.percentage_advance %>%</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="label label-<%= student.status == 'Activo' ? 'success' : 'default' %>"><%= student.status %></span></td>
+            <td>
+              <%= link_to student_path(student), class: 'btn btn-xs btn-default' do %>
+                <i class="fa fa-user"></i> Ficha
+              <% end %>
+              <%= link_to transcript_student_path(student), class: 'btn btn-xs btn-unal-primary' do %>
+                <i class="fa fa-file-text-o"></i> Historia
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="page-header" style="margin-top: 0;">
+  <h2><i class="fa fa-briefcase text-success"></i> Cuerpo Docente</h2>
+  <p class="text-muted">Profesores de dedicacion exclusiva, tiempo completo y catedra de la Universidad Nacional.</p>
+</div>
+
+<div class="panel panel-default panel-unal">
+  <div class="panel-body" style="padding: 0;">
+    <table class="table table-hover table-striped" style="margin-bottom: 0;">
+      <thead>
+        <tr>
+          <th>Docente</th>
+          <th>Facultad</th>
+          <th>Departamento</th>
+          <th>Dedicacion</th>
+          <th>Grado Academico</th>
+          <th>Correo Institucional</th>
+          <th>Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @teachers.each do |teacher| %>
+          <tr>
+            <td>
+              <strong><%= link_to teacher.full_name, teacher_path(teacher) %></strong>
+            </td>
+            <td><%= teacher.faculty.name %></td>
+            <td><%= teacher.department %></td>
+            <td><span class="label label-default"><%= teacher.dedication %></span></td>
+            <td><span class="label label-primary"><%= teacher.academic_degree %></span></td>
+            <td><code><%= teacher.email %></code></td>
+            <td>
+              <%= link_to teacher_path(teacher), class: 'btn btn-xs btn-default' do %>
+                <i class="fa fa-eye"></i> Perfil
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

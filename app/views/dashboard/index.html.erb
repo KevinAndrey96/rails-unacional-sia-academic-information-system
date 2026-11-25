@@ -1,0 +1,144 @@
+<div class="row" style="margin-bottom: 25px;">
+  <div class="col-md-12">
+    <div style="background: linear-gradient(135deg, #005944 0%, #003B2D 100%); color: white; padding: 25px 30px; border-radius: 8px;">
+      <h2 style="margin-top: 0; font-weight: 700;">
+        <i class="fa fa-university"></i> Sistema de Informacion Academica (SIA)
+      </h2>
+      <p style="font-size: 15px; margin-bottom: 0; opacity: 0.9;">
+        Universidad Nacional de Colombia - Sede Bogota. Plataforma de Gestion Curricular, Malla Academica y Metricas de Rendimiento Estudiantil (PAPA / Avance).
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="metric-card">
+      <h3><%= @faculties_count %></h3>
+      <p>Facultades</p>
+    </div>
+  </div>
+  <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="metric-card" style="border-left-color: #80A535;">
+      <h3><%= @careers_count %></h3>
+      <p>Programas</p>
+    </div>
+  </div>
+  <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="metric-card" style="border-left-color: #0284C7;">
+      <h3><%= @subjects_count %></h3>
+      <p>Asignaturas</p>
+    </div>
+  </div>
+  <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="metric-card" style="border-left-color: #F59E0B;">
+      <h3><%= @students_count %></h3>
+      <p>Estudiantes</p>
+    </div>
+  </div>
+  <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="metric-card" style="border-left-color: #8B5CF6;">
+      <h3><%= @teachers_count %></h3>
+      <p>Docentes</p>
+    </div>
+  </div>
+  <div class="col-md-2 col-sm-4 col-xs-6">
+    <div class="metric-card" style="border-left-color: #10B981;">
+      <h3><%= @average_university_papa %></h3>
+      <p>PAPA Promedio</p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-7">
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-graduation-cap"></i> Programas Curriculares de la Sede
+      </div>
+      <div class="panel-body" style="padding: 0;">
+        <table class="table table-hover table-striped" style="margin-bottom: 0;">
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Programa</th>
+              <th>Facultad</th>
+              <th>Creditos</th>
+              <th>Estudiantes</th>
+              <th>Accion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @careers_summary.each do |career| %>
+              <tr>
+                <td><code><%= career.code %></code></td>
+                <td><strong><%= career.name %></strong></td>
+                <td><%= career.faculty.name %></td>
+                <td><span class="label label-info"><%= career.total_credits %> cred.</span></td>
+                <td><span class="badge"><%= career.active_students_count %></span></td>
+                <td>
+                  <%= link_to career_path(career), class: 'btn btn-xs btn-default' do %>
+                    <i class="fa fa-eye"></i> Malla
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-users"></i> Estudiantes Recientes en el Sistema
+      </div>
+      <div class="panel-body" style="padding: 0;">
+        <ul class="list-group" style="margin-bottom: 0;">
+          <% @recent_students.each do |student| %>
+            <li class="list-group-item">
+              <div class="pull-right text-right">
+                <span class="label label-<%= student.papa.to_f >= 3.8 ? 'success' : (student.papa.to_f >= 3.0 ? 'primary' : 'danger') %>">
+                  PAPA <%= student.papa %>
+                </span>
+                <br>
+                <small class="text-muted"><%= student.percentage_advance %>% Avance</small>
+              </div>
+              <h5 style="margin: 0 0 4px 0;">
+                <%= link_to student_path(student) do %>
+                  <strong><%= student.full_name %></strong>
+                <% end %>
+              </h5>
+              <small class="text-muted">
+                <code><%= student.student_code %></code> | <%= student.career.try(:name) %>
+              </small>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-calendar"></i> Periodo Academico Activo
+      </div>
+      <div class="panel-body">
+        <% if @active_period.present? %>
+          <h4><strong><%= @active_period.name %> (<%= @active_period.code %>)</strong></h4>
+          <p class="text-muted">
+            <i class="fa fa-calendar"></i> Fechas: <%= @active_period.start_date || 'N/A' %> al <%= @active_period.end_date || 'N/A' %>
+          </p>
+          <p>
+            <span class="label label-success">Matricula e Inscripciones Abiertas</span>
+          </p>
+          <%= link_to enrollments_path, class: 'btn btn-unal-primary btn-sm' do %>
+            <i class="fa fa-list"></i> Ver Inscripciones del Periodo
+          <% end %>
+        <% else %>
+          <p class="text-muted">No hay periodos academicos activos registrados.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

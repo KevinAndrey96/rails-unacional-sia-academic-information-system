@@ -1,0 +1,74 @@
+<div class="page-header" style="margin-top: 0;">
+  <h2><i class="fa fa-calendar-check-o text-success"></i> Gestion de Inscripciones</h2>
+  <p class="text-muted">Matricula de asignaturas y registro de notas definitivas de los estudiantes.</p>
+</div>
+
+<div class="panel panel-default panel-unal">
+  <div class="panel-heading">
+    <div class="pull-right">
+      <%= form_tag enrollments_path, method: :get, class: 'form-inline' do %>
+        <label>Periodo:</label>
+        <%= select_tag :period_id, options_from_collection_for_select(@periods, :id, :name, @period_id), class: 'form-control input-sm', onchange: 'this.form.submit();' %>
+      <% end %>
+    </div>
+    <i class="fa fa-list"></i> Listado de Estudiantes Inscritos
+  </div>
+  <div class="panel-body" style="padding: 0;">
+    <table class="table table-hover table-striped" style="margin-bottom: 0;">
+      <thead>
+        <tr>
+          <th>Periodo</th>
+          <th>Estudiante</th>
+          <th>Asignatura</th>
+          <th>Grupo</th>
+          <th>Docente</th>
+          <th>Nota Definitiva</th>
+          <th>Estado</th>
+          <th>Actualizar Calificacion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @enrollments.each do |enr| %>
+          <% sub = enr.course_group.subject %>
+          <tr>
+            <td><code><%= enr.academic_period.code %></code></td>
+            <td>
+              <strong><%= link_to enr.student.full_name, student_path(enr.student) %></strong>
+              <br><small class="text-muted"><%= enr.student.student_code %></small>
+            </td>
+            <td>
+              <strong><%= sub.name %></strong> (<%= sub.code %>)
+              <br><small class="label <%= sub.typology_badge_class %>"><%= sub.typology %></small>
+            </td>
+            <td>Grupo <%= enr.course_group.group_number %></td>
+            <td><%= enr.course_group.teacher.full_name %></td>
+            <td>
+              <% if enr.final_grade.present? %>
+                <strong style="font-size: 14px; color: <%= enr.final_grade >= 3.0 ? '#10B981' : '#EF4444' %>;">
+                  <%= enr.final_grade %>
+                </strong>
+              <% else %>
+                <span class="text-muted">Pendiente</span>
+              <% end %>
+            </td>
+            <td>
+              <span class="label label-<%= enr.status == 'Aprobada' ? 'success' : (enr.status == 'Reprobada' ? 'danger' : 'info') %>">
+                <%= enr.status %>
+              </span>
+            </td>
+            <td>
+              <%= form_for enr, url: update_grade_enrollment_path(enr), method: :patch, html: { class: 'form-inline' } do |f| %>
+                <div class="input-group input-group-sm" style="width: 140px;">
+                  <%= f.number_field :final_grade, step: 0.1, min: 0.0, max: 5.0, class: 'form-control', placeholder: '0.0 - 5.0' %>
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit"><i class="fa fa-save"></i></button>
+                  </span>
+                </div>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Architecture & Academic Domain Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Syntax Linting for Ruby Models, Services & Controllers
+        run: |
+          ruby -c app/models/faculty.rb
+          ruby -c app/models/career.rb
+          ruby -c app/models/teacher.rb
+          ruby -c app/models/student.rb
+          ruby -c app/models/subject.rb
+          ruby -c app/models/subject_prerequisite.rb
+          ruby -c app/models/academic_period.rb
+          ruby -c app/models/course_group.rb
+          ruby -c app/models/enrollment.rb
+          ruby -c app/services/papa_calculator_service.rb
+          ruby -c app/services/prerequisite_validator_service.rb
+          ruby -c app/services/academic_audit_service.rb
+          ruby -c app/controllers/dashboard_controller.rb
+          ruby -c app/controllers/faculties_controller.rb
+          ruby -c app/controllers/careers_controller.rb
+          ruby -c app/controllers/teachers_controller.rb
+          ruby -c app/controllers/students_controller.rb
+          ruby -c app/controllers/subjects_controller.rb
+          ruby -c app/controllers/enrollments_controller.rb
+          ruby -c app/controllers/transcripts_controller.rb
+          ruby -c db/seeds.rb
+
+      - name: Run SIA Architecture & PAPA Verification Suite
+        run: |
+          python3 scripts/verify_unacional_sia.py
+
+      - name: Validate Docker Compose Configuration
+        run: |
+          docker compose config --quiet

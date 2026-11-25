@@ -1,0 +1,41 @@
+<div class="page-header" style="margin-top: 0;">
+  <h2><i class="fa fa-graduation-cap text-success"></i> Programas Curriculares (Carreras)</h2>
+  <p class="text-muted">Planes de estudio de pregrado y posgrado en la Universidad Nacional de Colombia.</p>
+</div>
+
+<div class="panel panel-default panel-unal">
+  <div class="panel-body" style="padding: 0;">
+    <table class="table table-hover table-striped" style="margin-bottom: 0;">
+      <thead>
+        <tr>
+          <th>Codigo</th>
+          <th>Nombre del Programa</th>
+          <th>Facultad</th>
+          <th>SNIES</th>
+          <th>Creditos Totales</th>
+          <th>Duracion</th>
+          <th>Estudiantes</th>
+          <th>Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @careers.each do |career| %>
+          <tr>
+            <td><code><%= career.code %></code></td>
+            <td><strong><%= link_to career.name, career_path(career) %></strong></td>
+            <td><%= career.faculty.name %></td>
+            <td><%= career.snies_code || 'N/A' %></td>
+            <td><span class="label label-primary"><%= career.total_credits %> Creditos</span></td>
+            <td><%= career.duration_semesters %> Semestres</td>
+            <td><span class="badge"><%= career.active_students_count %></span></td>
+            <td>
+              <%= link_to career_path(career), class: 'btn btn-xs btn-unal-primary' do %>
+                <i class="fa fa-eye"></i> Malla Curricular
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<div class="page-header" style="margin-top: 0;">
+  <h2><i class="fa fa-book text-success"></i> Catalogo de Asignaturas UNAL</h2>
+  <p class="text-muted">Cursos categorizados bajo la clasificacion oficial de la Universidad Nacional de Colombia.</p>
+</div>
+
+<div class="btn-group" style="margin-bottom: 20px;">
+  <%= link_to "Todas", subjects_path, class: "btn btn-default #{'active' if @typology.blank?}" %>
+  <%= link_to "Basica de Facultad (B)", subjects_path(typology: 'B'), class: "btn btn-primary #{'active' if @typology == 'B'}" %>
+  <%= link_to "Disciplinar / Obligatoria (P)", subjects_path(typology: 'P'), class: "btn btn-success #{'active' if @typology == 'P'}" %>
+  <%= link_to "Optativa / Elegible (O)", subjects_path(typology: 'O'), class: "btn btn-info #{'active' if @typology == 'O'}" %>
+  <%= link_to "Libre Eleccion (L)", subjects_path(typology: 'L'), class: "btn btn-warning #{'active' if @typology == 'L'}" %>
+</div>
+
+<div class="panel panel-default panel-unal">
+  <div class="panel-body" style="padding: 0;">
+    <table class="table table-hover table-striped" style="margin-bottom: 0;">
+      <thead>
+        <tr>
+          <th>Codigo SIA</th>
+          <th>Nombre de Asignatura</th>
+          <th>Creditos</th>
+          <th>Tipologia</th>
+          <th>Facultad</th>
+          <th>Programa</th>
+          <th>Nivel</th>
+          <th>Prerrequisitos</th>
+          <th>Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @subjects.each do |subject| %>
+          <tr>
+            <td><code><%= subject.code %></code></td>
+            <td><strong><%= link_to subject.name, subject_path(subject) %></strong></td>
+            <td><span class="badge"><%= subject.credits %> cred</span></td>
+            <td><span class="label <%= subject.typology_badge_class %>"><%= subject.typology_name %></span></td>
+            <td><%= subject.faculty.name %></td>
+            <td><%= subject.career.try(:name) || 'Interfacultades' %></td>
+            <td>Semestre <%= subject.semester_level %></td>
+            <td>
+              <% if subject.prerequisites.any? %>
+                <small class="text-danger"><%= subject.prerequisites.map(&:name).join(', ') %></small>
+              <% else %>
+                <small class="text-muted">Ninguno</small>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to subject_path(subject), class: 'btn btn-xs btn-default' do %>
+                <i class="fa fa-eye"></i> Detalle
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

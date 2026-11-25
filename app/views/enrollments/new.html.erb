@@ -1,0 +1,41 @@
+<div class="page-header" style="margin-top: 0;">
+  <h2><i class="fa fa-plus-circle text-success"></i> Inscribir Asignatura en Periodo Activo</h2>
+  <p class="text-muted">Validacion automatica de prerrequisitos, cupo de creditos y disponibilidad de plazas.</p>
+</div>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-pencil"></i> Formulario de Inscripcion Academica
+      </div>
+      <div class="panel-body">
+        <%= form_for @enrollment, url: enrollments_path do |f| %>
+          <div class="form-group">
+            <label>Estudiante:</label>
+            <% if @student.present? %>
+              <%= f.hidden_field :student_id, value: @student.id %>
+              <div class="well well-sm">
+                <strong><%= @student.full_name %></strong> (Carnet: <code><%= @student.student_code %></code>)
+                <br><small class="text-muted"><%= @student.career.name %> | PAPA: <%= @student.papa %></small>
+              </div>
+            <% else %>
+              <%= f.collection_select :student_id, Student.all.order(:last_name), :id, :full_name, {}, { class: 'form-control' } %>
+            <% end %>
+          </div>
+
+          <div class="form-group">
+            <label>Asignatura y Grupo a Inscribir:</label>
+            <%= f.collection_select :course_group_id, @available_groups, :id, :display_name, {}, { class: 'form-control' } %>
+            <p class="help-block">El sistema verificara que cumplas con los prerrequisitos aprobados.</p>
+          </div>
+
+          <div class="text-right">
+            <%= link_to "Cancelar", (@student ? student_path(@student) : enrollments_path), class: 'btn btn-default' %>
+            <%= f.submit "Completar Inscripcion", class: 'btn btn-unal-primary' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

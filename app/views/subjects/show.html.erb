@@ -1,0 +1,85 @@
+<div class="page-header" style="margin-top: 0;">
+  <div class="pull-right">
+    <%= link_to subjects_path, class: 'btn btn-default' do %>
+      <i class="fa fa-arrow-left"></i> Volver a Asignaturas
+    <% end %>
+  </div>
+  <h2><%= @subject.name %> <small>(Codigo SIA: <%= @subject.code %>)</small></h2>
+  <p class="text-muted"><%= @subject.faculty.name %> - <%= @subject.career.try(:name) %> - Semestre <%= @subject.semester_level %></p>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-info-circle"></i> Ficha Tecnica Curricular
+      </div>
+      <div class="panel-body">
+        <p><strong>Creditos Academicos:</strong> <span class="badge"><%= @subject.credits %></span></p>
+        <p><strong>Tipologia:</strong> <span class="label <%= @subject.typology_badge_class %>"><%= @subject.typology_name %> (<%= @subject.typology %>)</span></p>
+        <p><strong>Facultad:</strong> <%= @subject.faculty.name %></p>
+        <p><strong>Programa:</strong> <%= @subject.career.try(:name) || 'Comun de Facultad' %></p>
+        <hr>
+        <h5><strong>Prerrequisitos:</strong></h5>
+        <% if @prerequisites.any? %>
+          <ul>
+            <% @prerequisites.each do |pre| %>
+              <li><%= link_to "#{pre.name} (#{pre.code})", subject_path(pre) %> - Min: 3.0</li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted">No exige prerrequisitos de aprobacion.</p>
+        <% end %>
+
+        <h5><strong>Asignaturas que la exigen como prerrequisito:</strong></h5>
+        <% if @dependent_subjects.any? %>
+          <ul>
+            <% @dependent_subjects.each do |dep| %>
+              <li><%= link_to "#{dep.name} (#{dep.code})", subject_path(dep) %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted">Ninguna asignatura posterior la tiene como prerrequisito.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-calendar"></i> Oferta de Grupos y Docentes
+      </div>
+      <div class="panel-body" style="padding: 0;">
+        <table class="table table-hover table-striped" style="margin-bottom: 0;">
+          <thead>
+            <tr>
+              <th>Periodo</th>
+              <th>Grupo</th>
+              <th>Docente</th>
+              <th>Aula</th>
+              <th>Horario</th>
+              <th>Cupos Disponibles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @course_groups.each do |group| %>
+              <tr>
+                <td><code><%= group.academic_period.code %></code></td>
+                <td>Grupo <%= group.group_number %></td>
+                <td><%= group.teacher.full_name %></td>
+                <td><%= group.classroom %></td>
+                <td><small><%= group.schedule %></small></td>
+                <td>
+                  <span class="badge" style="background: <%= group.available_spots > 0 ? '#10B981' : '#EF4444' %>;">
+                    <%= group.available_spots %> / <%= group.capacity %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

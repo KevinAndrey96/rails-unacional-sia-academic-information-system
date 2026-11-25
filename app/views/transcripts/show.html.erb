@@ -1,0 +1,154 @@
+<div class="row hidden-print" style="margin-bottom: 20px;">
+  <div class="col-md-12 text-right">
+    <button onclick="window.print();" class="btn btn-unal-primary">
+      <i class="fa fa-print"></i> Imprimir Historia Academica
+    </button>
+    <%= link_to student_path(@student), class: 'btn btn-default' do %>
+      <i class="fa fa-arrow-left"></i> Volver a Ficha
+    <% end %>
+  </div>
+</div>
+
+<div class="panel panel-default" style="border: 2px solid #005944; border-radius: 8px; padding: 25px; background: #FFF; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+  <div class="row" style="border-bottom: 3px double #005944; padding-bottom: 20px; margin-bottom: 25px;">
+    <div class="col-xs-8">
+      <h3 style="color: #005944; font-weight: 800; margin: 0 0 5px 0; letter-spacing: 0.5px;">
+        UNIVERSIDAD NACIONAL DE COLOMBIA
+      </h3>
+      <h4 style="margin: 0 0 5px 0; color: #475569; font-weight: 600;">
+        SISTEMA DE INFORMACION ACADEMICA (SIA)
+      </h4>
+      <p style="margin: 0; color: #64748B; font-size: 13px;">
+        Sede Bogota - Division de Registro y Matricula | Certificado Oficial de Calificaciones
+      </p>
+    </div>
+    <div class="col-xs-4 text-right">
+      <div style="border: 1px solid #CBD5E1; padding: 10px; border-radius: 4px; display: inline-block; background: #F8FAFC;">
+        <small class="text-muted">FECHA DE EMISION</small><br>
+        <strong><%= Time.now.strftime("%d/%m/%Y") %></strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-bottom: 20px;">
+    <div class="col-xs-6">
+      <p><strong>ESTUDIANTE:</strong> <%= @student.full_name %></p>
+      <p><strong>DOCUMENTO:</strong> <%= @student.document %></p>
+      <p><strong>CARNET / CODIGO:</strong> <code><%= @student.student_code %></code></p>
+    </div>
+    <div class="col-xs-6">
+      <p><strong>FACULTAD:</strong> <%= @audit[:faculty].try(:name) %></p>
+      <p><strong>PROGRAMA CURRICULAR:</strong> <%= @audit[:career].try(:name) %> (Cod: <%= @audit[:career].try(:code) %>)</p>
+      <p><strong>PERIODO DE INGRESO:</strong> <%= @student.entry_period %></p>
+    </div>
+  </div>
+
+  <div class="row" style="margin-bottom: 25px;">
+    <div class="col-xs-3 text-center">
+      <div style="background: #F1F5F9; border-radius: 6px; padding: 12px;">
+        <span style="font-size: 24px; font-weight: 800; color: #005944;"><%= @audit[:papa] %></span>
+        <br><small class="text-muted">PAPA ACUMULADO</small>
+      </div>
+    </div>
+    <div class="col-xs-3 text-center">
+      <div style="background: #F1F5F9; border-radius: 6px; padding: 12px;">
+        <span style="font-size: 24px; font-weight: 800; color: #80A535;"><%= @audit[:percentage_advance] %>%</span>
+        <br><small class="text-muted">PORCENTAJE AVANCE</small>
+      </div>
+    </div>
+    <div class="col-xs-3 text-center">
+      <div style="background: #F1F5F9; border-radius: 6px; padding: 12px;">
+        <span style="font-size: 24px; font-weight: 800; color: #0284C7;"><%= @audit[:approved_credits] %> / <%= @audit[:total_career_credits] %></span>
+        <br><small class="text-muted">CREDITOS APROBADOS</small>
+      </div>
+    </div>
+    <div class="col-xs-3 text-center">
+      <div style="background: #F1F5F9; border-radius: 6px; padding: 12px;">
+        <span style="font-size: 18px; font-weight: 700; color: #475569;"><%= @audit[:standing][:status] %></span>
+        <br><small class="text-muted">ESTADO ACADEMICO</small>
+      </div>
+    </div>
+  </div>
+
+  <h4 style="color: #005944; border-bottom: 2px solid #E2E8F0; padding-bottom: 6px;">
+    <i class="fa fa-pie-chart"></i> Resumen de Creditos por Tipologia (Acuerdo 008 de 2008 CSU)
+  </h4>
+  <table class="table table-bordered" style="margin-bottom: 25px; font-size: 13px;">
+    <thead>
+      <tr style="background: #F8FAFC;">
+        <th>Tipologia Curricular</th>
+        <th class="text-center">Asignaturas Aprobadas</th>
+        <th class="text-center">Creditos Acumulados</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @audit[:typology_breakdown].each do |code, item| %>
+        <tr>
+          <td><strong><%= code %></strong> - <%= item[:name] %></td>
+          <td class="text-center"><%= item[:total_courses] %></td>
+          <td class="text-center"><strong><%= item[:approved_credits] %></strong> cred.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h4 style="color: #005944; border-bottom: 2px solid #E2E8F0; padding-bottom: 6px;">
+    <i class="fa fa-list-alt"></i> Historial Detallado de Calificaciones por Semestre
+  </h4>
+
+  <% @audit[:periods_history].each do |period_code, pdata| %>
+    <div style="margin-bottom: 20px;">
+      <div style="background: #E2E8F0; padding: 6px 12px; border-radius: 4px; font-weight: 700;">
+        <div class="pull-right">
+          PAPPI del Periodo: <strong style="color: #005944;"><%= pdata[:pappi] %></strong> | Total Creditos: <%= pdata[:semester_credits] %>
+        </div>
+        Periodo Academico <%= period_code %> (<%= pdata[:period].name %>)
+      </div>
+      <table class="table table-condensed table-striped" style="margin-bottom: 0; font-size: 13px;">
+        <thead>
+          <tr>
+            <th>Codigo</th>
+            <th>Nombre de Asignatura</th>
+            <th class="text-center">Tipologia</th>
+            <th class="text-center">Creditos</th>
+            <th class="text-center">Calificacion</th>
+            <th class="text-center">Resultado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% pdata[:enrollments].each do |enr| %>
+            <% sub = enr.course_group.subject %>
+            <tr>
+              <td><%= sub.code %></td>
+              <td><%= sub.name %></td>
+              <td class="text-center"><span class="label <%= sub.typology_badge_class %>"><%= sub.typology %></span></td>
+              <td class="text-center"><%= sub.credits %></td>
+              <td class="text-center"><strong><%= enr.final_grade.present? ? enr.final_grade : 'CURSANDO' %></strong></td>
+              <td class="text-center">
+                <span class="label label-<%= enr.status == 'Aprobada' ? 'success' : (enr.status == 'Reprobada' ? 'danger' : 'info') %>">
+                  <%= enr.status %>
+                </span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <div style="margin-top: 40px; border-top: 1px dashed #CBD5E1; padding-top: 20px;">
+    <div class="row">
+      <div class="col-xs-8">
+        <p class="text-muted" style="font-size: 11px; margin: 0;">
+          * Documento emitido digitalmente por el Sistema de Informacion Academica (SIA) de la Universidad Nacional de Colombia.<br>
+          * Valido como certificado de notas de caracter informativo sin requerir firma autografa segun reglamentacion institucional.
+        </p>
+      </div>
+      <div class="col-xs-4 text-right">
+        <div style="border: 2px solid #005944; padding: 6px; display: inline-block; font-family: monospace; font-size: 11px; color: #005944;">
+          SIA-UNAL-AUTH: <%= Digest::MD5.hexdigest("#{@student.student_code}-#{@audit[:papa]}")[0..11].upcase %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

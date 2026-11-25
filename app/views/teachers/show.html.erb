@@ -1,0 +1,60 @@
+<div class="page-header" style="margin-top: 0;">
+  <div class="pull-right">
+    <%= link_to teachers_path, class: 'btn btn-default' do %>
+      <i class="fa fa-arrow-left"></i> Volver a Docentes
+    <% end %>
+  </div>
+  <h2>Prof. <%= @teacher.full_name %> <small>(<%= @teacher.academic_degree %>)</small></h2>
+  <p class="text-muted"><%= @teacher.department %> - <%= @faculty.name %> - <%= @teacher.email %></p>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-id-card"></i> Datos del Profesor
+      </div>
+      <div class="panel-body">
+        <p><strong>Documento:</strong> <%= @teacher.document %></p>
+        <p><strong>Cubiculo / Oficina:</strong> <%= @teacher.office || 'Por Asignar' %></p>
+        <p><strong>Dedicacion:</strong> <%= @teacher.dedication %></p>
+        <p><strong>Grado:</strong> <%= @teacher.academic_degree %></p>
+        <p><strong>Email Institucional:</strong> <code><%= @teacher.email %></code></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="panel panel-default panel-unal">
+      <div class="panel-heading">
+        <i class="fa fa-calendar-check-o"></i> Grupos y Cursos Asignados
+      </div>
+      <div class="panel-body" style="padding: 0;">
+        <table class="table table-hover table-striped" style="margin-bottom: 0;">
+          <thead>
+            <tr>
+              <th>Periodo</th>
+              <th>Asignatura</th>
+              <th>Grupo</th>
+              <th>Aula</th>
+              <th>Horario</th>
+              <th>Cupos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @course_groups.each do |group| %>
+              <tr>
+                <td><code><%= group.academic_period.code %></code></td>
+                <td><strong><%= group.subject.name %></strong></td>
+                <td>Grupo <%= group.group_number %></td>
+                <td><%= group.classroom %></td>
+                <td><small><%= group.schedule %></small></td>
+                <td><%= group.enrollments.count %> / <%= group.capacity %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

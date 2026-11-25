@@ -1,0 +1,47 @@
+<div class="page-header" style="margin-top: 0;">
+  <h2><i class="fa fa-building-o text-success"></i> Facultades de la Sede Bogota</h2>
+  <p class="text-muted">Estructura academico-administrativa de la Universidad Nacional de Colombia.</p>
+</div>
+
+<div class="row">
+  <% @faculties.each do |faculty| %>
+    <div class="col-md-6">
+      <div class="panel panel-default panel-unal">
+        <div class="panel-heading">
+          <div class="pull-right">
+            <code><%= faculty.code %></code>
+          </div>
+          <h4 style="margin: 0;">
+            <%= link_to faculty.name, faculty_path(faculty) %>
+          </h4>
+        </div>
+        <div class="panel-body">
+          <p><i class="fa fa-map-marker text-danger"></i> <strong>Sede:</strong> <%= faculty.campus %></p>
+          <p><i class="fa fa-user-circle text-primary"></i> <strong>Decano:</strong> <%= faculty.dean || 'Por Asignar' %></p>
+          <p><i class="fa fa-history text-muted"></i> <strong>Ano de Fundacion:</strong> <%= faculty.foundation_year %></p>
+
+          <hr style="margin: 10px 0;">
+          <div class="row text-center">
+            <div class="col-xs-4">
+              <h4><strong><%= faculty.careers.count %></strong></h4>
+              <small class="text-muted">Programas</small>
+            </div>
+            <div class="col-xs-4">
+              <h4><strong><%= faculty.total_teachers_count %></strong></h4>
+              <small class="text-muted">Docentes</small>
+            </div>
+            <div class="col-xs-4">
+              <h4><strong><%= faculty.total_students_count %></strong></h4>
+              <small class="text-muted">Estudiantes</small>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <%= link_to faculty_path(faculty), class: 'btn btn-sm btn-unal-primary' do %>
+            <i class="fa fa-eye"></i> Ver Facultad y Programas
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
