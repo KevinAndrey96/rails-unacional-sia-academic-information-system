@@ -2,7 +2,7 @@
 ### Plataforma de Modelado Curricular, Calculo de PAPA y Auditoria Academica
 **Universidad Nacional de Colombia (Sede Bogota)**
 
-[![CI](https://github.com/KevinAndrey96/unacional-sia-academic-information-system-rails/actions/workflows/ci.yml/badge.svg)](https://github.com/KevinAndrey96/unacional-sia-academic-information-system-rails/actions/workflows/ci.yml)
+[![CI](https://github.com/KevinAndrey96/rails-unacional-sia-academic-information-system/actions/workflows/ci.yml/badge.svg)](https://github.com/KevinAndrey96/rails-unacional-sia-academic-information-system/actions/workflows/ci.yml)
 [![Ruby on Rails](https://img.shields.io/badge/Ruby_on_Rails-4.2%20%7C%20ActiveRecord-CC0000?logo=rubyonrails)](https://rubyonrails.org/)
 [![Ruby](https://img.shields.io/badge/Ruby-2.7%20%7C%203.2-CC342D?logo=ruby)](https://www.ruby-lang.org/)
 [![Database](https://img.shields.io/badge/Database-SQLite%20%7C%20PostgreSQL-003B57?logo=sqlite)](https://www.sqlite.org/)
@@ -209,8 +209,8 @@ El sistema implementa arquitectura orientada a servicios desacoplada de los cont
 ### Inicio Instantaneo
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/KevinAndrey96/unacional-sia-academic-information-system-rails.git
-cd unacional-sia-academic-information-system-rails
+git clone https://github.com/KevinAndrey96/rails-unacional-sia-academic-information-system.git
+cd rails-unacional-sia-academic-information-system
 
 # 2. Levantar el contenedor
 docker compose up -d
